@@ -1,0 +1,27 @@
+function doGet(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  
+  if (!e.parameter.id || !e.parameter.ammonia) {
+    return ContentService.createTextOutput("Error: Missing 'id' or 'ammonia' parameter")
+      .setMimeType(ContentService.MimeType.TEXT);
+  }
+
+  var espID = e.parameter.id; // ESP-1 or ESP-2
+  var ammoniaValue = e.parameter.ammonia; // Ammonia value
+  var timestamp = new Date(); // Current timestamp
+
+  var newRow = [timestamp, "", ""]; // Default row with empty ESP-1 and ESP-2 columns
+
+  if (espID === "ESP-1") {
+    newRow[1] = ammoniaValue; // Column B (ESP-1)
+  } else if (espID === "ESP-2") {
+    newRow[2] = ammoniaValue; // Column C (ESP-2)
+  } else {
+    return ContentService.createTextOutput("Error: Unknown ESP ID")
+      .setMimeType(ContentService.MimeType.TEXT);
+  }
+
+  sheet.appendRow(newRow); // Add the new row to the sheet
+
+  return ContentService.createTextOutput("Success").setMimeType(ContentService.MimeType.TEXT);
+}
